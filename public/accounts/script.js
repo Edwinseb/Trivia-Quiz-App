@@ -32,3 +32,19 @@ registerForm.addEventListener('submit', function(e) {
     alert("registered");
 });
 
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Temporarily prevent form submission
+    
+    console.log('Form submitted!');
+    
+    const formData = {
+        fullname: document.getElementById('registerName').value,
+        email: document.getElementById('registerEmail').value,
+        password: document.getElementById('registerPassword').value
+    };
+    
+    console.log('Form data:', formData);
+    
+    // Now manually submit the form
+    this.submit();
+});
