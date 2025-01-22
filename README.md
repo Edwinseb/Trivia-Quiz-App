@@ -1,1 +1,1 @@
-Trivia Quiz App using HTML,CSS, JavaScript & MySQL
+Trivia Quiz App using HTML, CSS, JavaScript & MySQL
