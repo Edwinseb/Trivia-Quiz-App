@@ -40,7 +40,7 @@ app.post('/register', (req, res) => {
       res.status(500).send('Registration failed. Please try again.');
       return;
     }
-    res.send('User registered successfully!');
+    res.redirect('/index.html');
   });
 });
 
@@ -56,7 +56,7 @@ app.post('/login', (req, res) => {
     }
     
     if (results.length > 0) {
-      res.send('Login successful!');
+      res.redirect('/index.html');
     } else {
       res.status(401).send('Invalid email or password');
     }
