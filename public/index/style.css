@@ -1,13 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #fff36d;
     display: flex;
     justify-content: center;
     height: 100vh;
     margin: 0;
 }
 .quiz-container {
-    background-color: white;
+    background-color: #fffce1;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     width: 100%;
@@ -17,8 +17,20 @@ body {
 }
 .quiz-container h1 {
     margin-bottom: 20px;
-    color: #333;
+    color: #000000;
+    padding: 0 0 30px 0;
 }
+.quiz-container #intro {
+    line-height: 30px;
+}
+
+.divider {
+    border-bottom: 2px solid black;
+    width: 100%;
+    display: block; /* Not inline */
+    margin: 15px 0; /* Add some vertical spacing */
+}
+
 .category-grid {
     padding: 30px 30px;
     display: grid;
@@ -28,8 +40,8 @@ body {
 }
 .category-btn {
     padding: 10px;
-    border: 2px solid #ddd;
-    background-color: white;
+    border: 2px solid #000000;
+    background-color: #fff36d;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
