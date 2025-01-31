@@ -1,13 +1,40 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    background-color: #fff36d;
+    background-color: #78CAD2;
     display: flex;
     justify-content: center;
     height: 100vh;
     margin: 0;
 }
+#profileBtn {
+    max-width: fit-content;
+    display: block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: #3bc7ff;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+#logoutBtn { /* Added style for logout button */
+    margin-top: 15px; 
+    padding: 12px 24px;
+    background-color: #ff4b5c;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#logoutBtn:hover {
+    background-color: #d83a47;
+}
 .quiz-container {
-    background-color: #fffce1;
+    background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     width: 100%;
@@ -27,8 +54,8 @@ body {
 .divider {
     border-bottom: 2px solid black;
     width: 100%;
-    display: block; /* Not inline */
-    margin: 15px 0; /* Add some vertical spacing */
+    display: block;
+    margin: 15px 0;
 }
 
 .category-grid {
@@ -41,26 +68,27 @@ body {
 .category-btn {
     padding: 10px;
     border: 2px solid #000000;
-    background-color: #fff36d;
+    background-color: #78CAD2;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 .category-btn:hover {
-    background-color: #f0f0f0;
+    background-color: #5497A7;
 }
 .category-btn.selected {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
+    background-color: #5497A7;
+    color: black;
+    border-color: #5497A7;
 }
 #start-btn {
     max-width: 75%;
     max-height: 25%;
     width: 100%;
     padding: 10px;
-    background-color: #28a745;
-    color: white;
+    background-color: #3bc7ff;
+    color: black;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;

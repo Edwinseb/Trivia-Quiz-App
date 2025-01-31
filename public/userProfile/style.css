@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #A1D2CE;
+    flex-direction: column;
+}
+h1 {
+    margin-bottom: 20px;
+}
+.profile-container {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+.quiz-stats {
+    margin-top: 20px;
+    padding: 20px;
+    background: #62A8AC;
+    color: black;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.quiz-stats h3 {
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+.quiz-stats p {
+    margin: 8px 0;
+    font-size: 18px;
+}
+.home-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.home-button:hover {
+    background: #218838;
+}
+#logoutBtn { /* Added style for logout button */
+    margin-top: 20px; 
+    padding: 12px 24px;
+    background-color: #ff4b5c;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#logoutBtn:hover {
+    background-color: #d83a47;
+}

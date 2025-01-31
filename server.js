@@ -1,8 +1,16 @@
 const express = require('express'); // For creating the server
 const mysql = require('mysql2'); // For connecting to the database
 const bodyParser = require('body-parser'); // For reading form data
-
+const session = require('express-session');
 const app = express(); // Create the Express app
+
+// Use sessions
+app.use(session({
+  secret: 'your_secret_key', // Change this to a secure key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 // To handle form data properly
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,13 +36,13 @@ db.connect((err) => {
 
 // Create a route to handle user registration
 app.post('/register', (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { username, email, password } = req.body;
 
-  console.log('Received data:', { fullname, email, password });
+  console.log('Received data:', { username, email, password });
 
   // Insert the data into the users table
-  const query = 'INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)';
-  db.query(query, [fullname, email, password], (err, result) => {
+  const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+  db.query(query, [username, email, password], (err, result) => {
     if (err) {
       console.error('Error inserting user:', err);
       res.status(500).send('Registration failed. Please try again.');
@@ -44,6 +52,7 @@ app.post('/register', (req, res) => {
   });
 });
 
+// User login route
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   
@@ -54,12 +63,29 @@ app.post('/login', (req, res) => {
       res.status(500).send('Login failed. Please try again.');
       return;
     }
-    
+
     if (results.length > 0) {
+      req.session.user = results[0]; // Store user in session
       res.redirect('/index.html');
     } else {
       res.status(401).send('Invalid email or password');
     }
+  });
+});
+
+// Check login status
+app.get('/isLoggedIn', (req, res) => {
+  if (req.session.user) {
+    res.json({ loggedIn: true });
+  } else {
+    res.json({ loggedIn: false });
+  }
+});
+
+// Logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/account.html'); // Redirect to homepage after logout
   });
 });
 
