@@ -37,6 +37,15 @@ document.getElementById('logoutBtn').addEventListener('click', function() {
         method: 'GET',
         credentials: 'same-origin' // Ensure cookies are sent with the request
     })
-    .then(response => window.location.href = '/public/index.html') // Redirect to index after logout
+    .then(response => window.location.href = '/index.html') // Redirect to index after logout
     .catch(error => console.error('Logout failed:', error));
 });
+
+//profile button
+ document.getElementById('profileBtn').addEventListener('click', function (){
+    fetch('/api/user',{
+        method: 'GET', credentials: 'same-origin'
+    })
+    .then(response => window.location.href = '/userProfile/userProfile.html') //redirect to profile
+    .catch(error => console.error('could not load user profile',error))
+ });

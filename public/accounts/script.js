@@ -38,7 +38,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     console.log('Form submitted!');
     
     const formData = {
-        fullname: document.getElementById('registerName').value,
+        username: document.getElementById('registerName').value,
         email: document.getElementById('registerEmail').value,
         password: document.getElementById('registerPassword').value
     };

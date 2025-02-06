@@ -34,18 +34,24 @@ h1 {
     margin: 8px 0;
     font-size: 18px;
 }
-.home-button {
-    display: inline-block;
+
+.btns{
+    display: flex;
+    justify-content: space-between;
+}
+#homeBtn {
     margin-top: 20px;
     padding: 12px 24px;
-    background: #28a745;
+    background-color: #28a745;
     color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
-.home-button:hover {
+#homeBtn:hover {
     background: #218838;
 }
 #logoutBtn { /* Added style for logout button */

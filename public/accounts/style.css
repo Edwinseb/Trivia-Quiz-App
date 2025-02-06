@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #fffce1;
+    background-color: #78CAD2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,8 +33,8 @@ input {
 }
 button {
     font-weight: bolder;
-    background-color: #007bff;
-    color: white;
+    background-color: #78CAD2;
+    
     padding: 0.75rem 1rem;
     border: none;
     border-radius: 4px;
@@ -43,7 +43,7 @@ button {
     margin-top: 1rem;
 }
 button:hover {
-    background-color: #fff36d;
+    background-color: #007bff;
     color: black;
 }
 .toggle-form {

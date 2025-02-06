@@ -22,7 +22,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'Dexter_2024',
-  database: 'quizApp'
+  database: 'quizapp'
 });
 
 // Connect to the database
@@ -36,7 +36,7 @@ db.connect((err) => {
 
 // Create a route to handle user registration
 app.post('/register', (req, res) => {
-  const { username, email, password } = req.body;
+  console.log('Received data:', req.body); // Debugging line
 
   console.log('Received data:', { username, email, password });
 
@@ -52,25 +52,44 @@ app.post('/register', (req, res) => {
   });
 });
 
-// User login route
+// User login route with user existence check
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  
-  const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
-  db.query(query, [email, password], (err, results) => {
+
+  // Check if user exists
+  const checkUserQuery = 'SELECT * FROM users WHERE email = ?';
+  db.query(checkUserQuery, [email], (err, results) => {
     if (err) {
       console.error('Login error:', err);
       res.status(500).send('Login failed. Please try again.');
       return;
     }
 
-    if (results.length > 0) {
-      req.session.user = results[0]; // Store user in session
+    if (results.length === 0) {
+      // No user found with this email
+      res.status(401).send('User not registered.');
+      return;
+    }
+
+    // User exists, now check password
+    const user = results[0];
+    if (user.password === password) {
+      req.session.user = user; // Store user in session
       res.redirect('/index.html');
     } else {
-      res.status(401).send('Invalid email or password');
+      res.status(401).send('Invalid password.');
     }
   });
+});
+
+// Fetch logged-in user details
+app.get('/api/user', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  const { username, email } = req.session.user;
+  res.json({ username, email });
 });
 
 // Check login status
