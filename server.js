@@ -108,6 +108,27 @@ app.get('/logout', (req, res) => {
   });
 });
 
+
+//quiz content
+// Fetch questions dynamically based on category
+app.get('/questions', (req, res) => {
+  const category = req.query.category; // Get category from query params
+
+  if (!category) {
+    return res.status(400).json({ error: 'Category is required' });
+  }
+
+  const sql = 'SELECT * FROM questions WHERE category = ?';
+  db.query(sql, [category], (err, results) => {
+    if (err) {
+      console.error('Error fetching questions:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(results); // Send questions as JSON
+  });
+});
+
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
