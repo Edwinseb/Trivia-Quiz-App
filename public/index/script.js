@@ -62,6 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function loadQuiz(category) {
     const quizContainer = document.querySelector('.quiz-container')
     quizContainer.style.height = "fit-content"; //to display all questions uniformly within the quiz-container
+    quizContainer.style.width = "fit-content"
+    quizContainer.innerHTML = `<div class="quiz-heading">
+                                    <h2>${category} Quiz</h2>
+                               </div>`; //category based heading
+    
     fetch(`http://localhost:3000/questions?category=${category}`)
         .then(response => response.json())
         .then(data => {
@@ -73,13 +78,14 @@ function loadQuiz(category) {
             displayQuestions(data); // Ensure questions are displayed
         })
         .catch(error => console.error("Error fetching questions:", error));
+    
 }
 
 //displaying questions
 function displayQuestions(questions) {
     console.log("Displaying Questions:", questions);
     const quizContainer = document.querySelector('.quiz-container');
-    quizContainer.innerHTML = ""; // Clear previous content
+    //quizContainer.innerHTML = ""; // Clear previous content
     
     questions.forEach((q, index) => {
         const questionDiv = document.createElement("div");
@@ -94,9 +100,16 @@ function displayQuestions(questions) {
                 <label><input type="radio" name="q${index}" value="D"> ${q.d}</label><br>`;
 
         quizContainer.appendChild(questionDiv);
+        
     });
-}
 
+    const sub = document.createElement("button"); 
+    sub.type = "submit"; 
+    sub.textContent = "Submit"; 
+    sub.id = "submit-btn";
+    sub.style.marginTop = "10px"; // Add spacing
+    quizContainer.appendChild(sub);
+}
 
 // Example usage
 //loadQuiz("Math");

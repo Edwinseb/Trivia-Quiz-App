@@ -65,7 +65,7 @@ body {
     /*height:fit-content;*/
     height: 100vh;
     max-width: 85%;
-    padding: 20px;
+    padding: 20px 30px;
     text-align: center;
 }
 .quiz-container h1 {
@@ -77,10 +77,30 @@ body {
     line-height: 30px;
 }
 
-.question>label{
-    line-height: 2rem;
+.quiz-heading{
+    background-color: lightgray;
+    padding: 10px 20px;
+}
+.quiz-heading h2 {
+    margin: 0px;
+}
+.question h3 {
+    align-items: start;
+    justify-content: start;
+    display: flex
+;
+}
+.question label {
+    display: flex;
+    align-items: center; /* Align radio button with text */
+    gap: 8px; /* Add space between radio button and text */
+    cursor: pointer;
 }
 
+.question input[type="radio"]{
+    align-items: start;
+    cursor: pointer;
+}
 /* Divider Line */
 .divider {
     border-bottom: 2px solid black;
@@ -133,4 +153,22 @@ body {
 #start-btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+#submit-btn{
+    font-family: inherit;
+    background-color:#3bc7ff;
+    color: black;
+    padding: 7px 20px;
+    border-radius: 5px;
+    border: none;
+}
+#submit-btn:hover{
+    background-color: forestgreen;
+    border-color: forestgreen;
+    color: white;
+    font-family: inherit;
+    padding: 7px 20px;
+    border-radius: 5px;
+    cursor:pointer;
 }
