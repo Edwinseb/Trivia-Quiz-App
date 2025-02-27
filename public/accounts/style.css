@@ -1,6 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #78CAD2;
+    background-image: url(lgpg.jpg);
+    background-color: rgba(0,0,0, 0.5);
+    background-blend-mode: overlay;
+    background-position: center;
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,20 +13,27 @@ body {
 }
 
 .container {
-    background-color: white;
+    background-color: rgb(0, 0, 0);
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 2px 2px rgba(255, 255, 255, 0.5);
     width: 100%;
     max-width: 400px;
+}
+#registerForm,#loginForm{
+    color: white;
 }
 .form-group {
     margin-bottom: 1rem;
 }
+
+h2.form-title {
+    color: white;
+}
 label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: #ffffff;
 }
 input {
     width: 100%;

@@ -4,28 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trivia Challenge</title>
-    <link rel="stylesheet" href="index/style.css">
+    <link rel="stylesheet" href="output.css">
+    <script src="./index.js" defer></script>
 </head>
-<body>
+<body class="flex flex-col justify-center items-center m-0 bg-black/50 bg-blend-overlay bg-center bg-cover bg-no-repeat"
+        style="background-image: url(lgpg.jpg);">
     <div class="quiz-container">
-        <div class = "header">
-            <button id="profileBtn" href="/userProfile/userProfile.html">My Profile</button>
-            <button id="logoutBtn">Logout</button> <!-- Logout button -->
+        <div class = "flex justify-between items-center p-2.5">
+            <button class="flex py-2 px-3.5 justify-center items-center text-center box-border rounded-md
+            border-none h-9 w-fit bg-gray-400 text-black font-bold hover:bg-white hover:text-black hover:font-bold" id="profileBtn" href="/userProfile/userProfile.html">My Profile</button>
+            <button class="flex py-2 px-3.5 justify-center items-center text-center box-border rounded-md
+            border-none h-9 w-fit bg-red-400 hover:bg-red-700 text-black font-bold hover:font-bold hover:text-white" id="logoutBtn">Logout</button>
         </div>
         
-        <h1>Trivia Challenge</h1>
-        <p id="intro">Welcome to my Trivia Quiz App! Test your knowledge in different topics and learn new facts.<br>
+        <h1 class="text-6xl font-bold text-[#78CAD2] mb-5">Trivia Challenge</h1>
+        <p class="text-white text-base leading-loose">Welcome to my Trivia Quiz App! Test your knowledge in different topics and learn new facts.<br>
                 Have a fun time answering the questions</p>
-        <div class="divider"></div>
-        <h3>Select a category to start your trivia quiz!</h3>
-        <div class="category-grid" id="category-grid">
-            <button class="category-btn" data-category="GK"><span>General Knowledge</span></button>
-            <button class="category-btn" data-category="Computer Science"><span>Computer Science</span></button>
-            <button class="category-btn" data-category="Sports"><span>Sports</span></button>
-            <button class="category-btn" data-category="Movies"><span>Movies</span></button>
+        <div class="border-b-2 py-1"></div>
+        <h3 class="text-lg pt-5">Select a category to start your trivia quiz!</h3>
+        <div class="grid grid-cols-2 p-8 gap-y-6 gap-x-0 mb-5 justify-items-center justify-center items-center" id="category-grid">
+            <button class="category-btn" data-category="GK">General Knowledge</button>
+            <button class="category-btn" data-category="Computer Science">Computer Science</button>
+            <button class="category-btn" data-category="Sports">Sports</button>
+            <button class="category-btn" data-category="Movies">Movies</button>
         </div>
-        <button id="start-btn" disabled>Start Quiz</button>
+        <button id="startBtn" class="startBtn" disabled>Start Quiz</button>
     </div>
-    <script src="index/script.js"></script>
+    
 </body>
 </html>
