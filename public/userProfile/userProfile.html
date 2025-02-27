@@ -3,28 +3,43 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/output.css">
+
     <title>User Profile</title>
 </head>
 
-<body>
-    <h1>My Profile</h1>
-    <div class="container"></div>
-    <div class="profile-container">
-        <h2 id="username">User Name</h2>
-        <p><strong>Email:</strong> <span id="email">user@example.com</span></p>
-        <div class="quiz-stats">
-            <h3>Quiz Stats</h3>
-            <p>Games Played: <span id="gamesPlayed">0</span></p>
-            <p>High Score: <span id="highScore">0</span></p>
+<body
+    class="flex flex-col justify-center items-center h-screen bg-black/75 bg-blend-overlay bg-center bg-cover bg-repeat-y"
+    style="background-image: url('neon blue.jpg');">
+
+    <div
+        class="flex flex-col flex-wrap justify-around content-center w-[600px] h-[600px] bg-black text-white p-10 rounded-lg shadow-lg text-center">
+        <div id="userInfo" class="">
+            <h2 id="username" class="text-4xl font-bold mb-4"></h2>
+            <h4 class="mt-2"><strong><span id="email"></span></strong></h4>
         </div>
-        <div class = "btns">
-            <button id="homeBtn">Dashboard</button>
-            <button id="logoutBtn">Logout</button> <!-- Logout button -->
+        <div
+            class="quiz-stats flex flex-col justify-around w-[400px] h-[200px] mt-4 p-4 bg-[#3bc7ff] text-black rounded-lg font-bold">
+            <h3 class="mb-2 text-2xl">Quiz Stats</h3>
+            <div>
+                <p>Games Played: <span id="gamesPlayed">0</span></p>
+                <p>High Score: <span id="highScore">0</span></p>
+            </div>
         </div>
-        
+
+        <div class="flex justify-between mt-4">
+            <button id="homeBtn"
+                class="w-7.5 px-4 py-2 border-solid border-2 border-green-600 hover:bg-green-600 text-green-600 hover:text-white font-bold rounded-md transition">
+                Dashboard
+            </button>
+            <button id="logoutBtn"
+                class="w-7.5 px-4 py-2 border-solid border-2 border-red-500 hover:bg-red-500 text-red-500 hover:text-white font-bold rounded-md transition">
+                Logout
+            </button>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <script src="/userProfile/script.js"></script>
 </body>
+
 </html>
