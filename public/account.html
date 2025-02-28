@@ -1,55 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="accounts/style.css">
+    <link rel="stylesheet" href="output.css">
     <title>Registration Form</title>
 </head>
-<body>
-    <div class="container">
-        <!-- Registration Form -->
-        <form action="/register" method="POST" id="registerForm">
-            <h2 class="form-title">Create Account</h2>
-            <div class="form-group">
-                <label for="registerName">Username</label>
-                <input type="text" id="registerName" name="username" required>
+
+<body class="font-sans bg-black/75 bg-blend-overlay bg-center bg-cover flex justify-center items-center h-screen m-0"
+    style="background-image: url(neonBlue.jpg)" ;>
+    <div class="bg-black p-8 rounded-lg shadow-md w-full max-w-md">
+
+        <!-- Login Form -->
+        <form action="/login" method="POST" id="loginForm" class="text-white">
+            <h2 class="text-white text-center text-xl font-bold mb-6">Sign In</h2>
+            <div class="mb-4">
+                <label for="loginEmail" class="block mb-2 text-white">Email</label>
+                <input type="email" id="loginEmail" name="email" required
+                    class="w-full p-2 border border-gray-300 rounded box-border text-black">
             </div>
-            <div class="form-group">
-                <label for="registerEmail">Email</label>
-                <input type="email" id="registerEmail" name="email" required>
+            <div class="mb-4">
+                <label for="loginPassword" class="block mb-2 text-white">Password</label>
+                <input type="password" id="loginPassword" name="password" required
+                    class="w-full p-2 border border-gray-300 rounded box-border text-black">
             </div>
-            <div class="form-group">
-                <label for="registerPassword">Password</label>
-                <input type="password" id="registerPassword" name="password" required>
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
-            <button type="submit" id="submitBtn">Register</button>
-            <div class="toggle-form">
-                Already have an account? <a href="#" onclick="toggleForms()">Sign In</a>
+            <button type="submit"
+                class="font-bold bg-blue-500 hover:bg-blue-600 hover:text-black p-3 border-none rounded w-full cursor-pointer mt-4">Sign
+                In</button>
+            <div class="text-center mt-4">
+                Don't have an account? <a href="#registerForm" onclick="toggleForms()"
+                    class="text-blue-500 no-underline hover:underline">Register</a>
             </div>
         </form>
-                
-        <!-- Login Form -->
-        <form action="/login" method="POST" id="loginForm">
-            <h2 class="form-title">Sign In</h2>
-            <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" name="email" required>
+
+        <!-- Registration Form -->
+        <form action="/register" method="POST" id="registerForm" class="text-white hidden">
+            <h2 class="text-white text-center text-xl font-bold mb-6">Create Account</h2>
+            <div class="mb-4">
+                <label for="registerName" class="block mb-2 text-white">Username</label>
+                <input type="text" id="registerName" name="username" required
+                    class="w-full p-2 border border-gray-300 rounded box-border text-black">
             </div>
-            <div class="form-group">
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" name="password"required>
+            <div class="mb-4">
+                <label for="registerEmail" class="block mb-2 text-white">Email</label>
+                <input type="email" id="registerEmail" name="email" required
+                    class="w-full p-2 border border-gray-300 rounded box-border text-black">
             </div>
-            <button type="submit">Sign In</button>
-            <div class="toggle-form">
-                Don't have an account? <a href="#" onclick="toggleForms()">Register</a>
+            <div class="mb-4">
+                <label for="registerPassword" class="block mb-2 text-white">Password</label>
+                <input type="password" id="registerPassword" name="password" required
+                    class="w-full p-2 border border-gray-300 rounded box-border text-black">
+            </div>
+            <div class="mb-4">
+                <label for="confirmPassword" class="block mb-2 text-white">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required
+                    class="w-full p-2 border border-gray-300 rounded box- text-black">
+            </div>
+            <button type="submit" id="submitBtn"
+                class="font-bold bg-blue-500 hover:bg-blue-600 hover:text-black p-3 border-none rounded w-full cursor-pointer mt-4">Register</button>
+            <div class="text-center mt-4">
+                Already have an account? <a href="#loginForm" onclick="toggleForms()"
+                    class="text-blue-500 no-underline hover:underline">Sign In</a>
             </div>
         </form>
     </div>
     <script src="accounts/script.js"></script>
 </body>
+
 </html>

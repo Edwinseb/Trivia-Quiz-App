@@ -9,7 +9,11 @@
 }
 @layer components {
     .category-btn {
-        @apply p-2.5 max-w-[75%] w-[100%] justify-center items-center justify-items-center gap-0 border-black rounded-md text-black font-bold bg-[#78CAD2] cursor-pointer transition-all duration-300 hover:bg-[#3bc7ff] hover:text-black hover:border-black after:bg-[#3bc7ff] ;
+        @apply p-2.5 max-w-[75%] w-[100%] justify-center items-center justify-items-center gap-0 border-black rounded-md text-black font-bold bg-[#78CAD2] cursor-pointer transition-all duration-300 hover:bg-[#3bc7ff] hover:text-black hover:border-black after:bg-[#3bc7ff] active:bg-[#3bc7ff];
+    }
+
+    .category-btn[aria-selected="true"] {
+        @apply bg-[#3bc7ff] text-black border-black;
     }
 
     .quiz-container .question {
@@ -25,12 +29,9 @@
     }
 
     .question label{
-        @apply flex pt-1.5 items-center gap-2 cursor-pointer leading-none text-left;
+        @apply flex pt-1.5 items-center gap-2 cursor-pointer leading-none text-left ml-7;
     }
     
-    /* #submitBtn{
-        @apply py-2 px-5 text-inherit font-bold text-black bg-[#ccf0ff] hover:bg-[#3bc7ff] hover:text-white;
-    } */
 
 }
 body{font-family: Verdana, Geneva, Tahoma, sans-serif;}
@@ -48,6 +49,7 @@ body{font-family: Verdana, Geneva, Tahoma, sans-serif;}
     padding: 20px 30px;
     text-align: center; 
 }
+
 
 #startBtn {
     width: 55%;
@@ -94,6 +96,7 @@ body{font-family: Verdana, Geneva, Tahoma, sans-serif;}
 #startBtn:disabled,
 #startBtn:disabled:after {
     cursor: not-allowed;
-    background-color: lightgray;
+    background-color: rgb(82, 82, 82);
+    border:2px solid rgb(82, 82, 82);
     color: black;
 }

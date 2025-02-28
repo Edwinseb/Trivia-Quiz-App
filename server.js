@@ -49,7 +49,10 @@ app.post('/register', (req, res) => {
       console.error('Error inserting user:', err);
       return res.status(500).send('Registration failed.');
     }
-    res.redirect('/index.html');
+    // Automatically log in the user
+    const user_id = result.insertId; // Get newly created user's ID
+    req.session.user = { user_id, username, email }; // Store user session
+    res.redirect('http://localhost:3000/index.html');
   });
 });
 
@@ -120,8 +123,6 @@ app.get('/questions', (req, res) => {
 
 // Storing quiz answers and validating them
 app.post('/submit-quiz', (req, res) => {
-  console.log("Session Data:", req.session); // Debugging session
-
   if (!req.session.user) {
     return res.status(401).json({ error: "User not logged in" });
   }

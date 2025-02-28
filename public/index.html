@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +8,37 @@
     <link rel="stylesheet" href="output.css">
     <script src="./index.js" defer></script>
 </head>
+
 <body class="flex flex-col justify-center items-center m-0 bg-black/75 bg-blend-overlay bg-center bg-cover bg-repeat-y"
-        style="background-image: url(neon\ blue.jpg);">
+    style="background-image: url(neonBlue.jpg);">
     <div class="quiz-container">
-        <div class = "flex justify-between items-center p-2.5">
-            <button class="flex py-2 px-3.5 justify-center items-center text-center box-border rounded-md
-            border-solid h-9 w-fit border-2 border-white text-white font-bold hover:bg-white hover:text-black hover:font-bold" id="profileBtn" href="userProfile.html">My Profile</button>
-            <button class="flex py-2 px-3.5 justify-center items-center text-center box-border rounded-md
-            border-solid border-2 border-red-700 h-9 w-fit hover:bg-red-700 text-white font-bold hover:font-bold hover:text-black" id="logoutBtn">Logout</button>
+        <div class="flex justify-between items-center p-2.5 mb-8">
+            <button
+                class="flex py-2 px-3.5 justify-center items-center text-center box-border rounded-md
+            border-solid h-9 w-fit border-2 border-green-600 text-green-600 font-bold hover:bg-green-600 hover:text-white hover:font-bold"
+                id="profileBtn" href="userProfile.html">My Profile</button>
+            <button
+                class="flex py-2 px-3.5 justify-center items-center text-center box-border rounded-md
+            border-solid border-2 border-red-700 h-9 w-fit hover:bg-red-700 text-red-700 font-bold hover:font-bold hover:text-white"
+                id="logoutBtn">Logout</button>
         </div>
-               
+
         <h1 class="text-6xl font-bold text-[#78CAD2] mb-5">Trivia Challenge</h1>
-        <p class="text-white text-base leading-loose">Welcome to my Trivia Quiz App! Test your knowledge in different topics and learn new facts.<br>
-                Have a fun time answering the questions</p>
+        <p class="text-white text-base leading-loose">Welcome to my Trivia Quiz App! Test your knowledge in different
+            topics and learn new facts.<br>
+            Have a fun time answering the questions</p>
         <div class="border-b-2 py-1"></div>
         <h3 class="text-lg pt-5">Select a category to start your trivia quiz!</h3>
-        <div class="grid grid-cols-2 p-8 gap-y-6 gap-x-0 mb-5 justify-items-center justify-center items-center" id="category-grid">
+        <div class="grid grid-cols-2 p-8 gap-y-6 gap-x-0 mb-5 justify-items-center justify-center items-center"
+            id="category-grid">
             <button class="category-btn" data-category="GK">General Knowledge</button>
             <button class="category-btn" data-category="Computer Science">Computer Science</button>
-            <button class="category-btn" data-category="Sports">Sports</button>
+            <button class="category-btn" data-category="Psychology">Psychology</button>
             <button class="category-btn" data-category="Movies">Movies</button>
         </div>
         <button id="startBtn" class="startBtn" disabled>Start Quiz</button>
     </div>
-    
+
 </body>
+
 </html>

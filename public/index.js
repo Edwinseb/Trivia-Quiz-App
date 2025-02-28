@@ -4,22 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
     let selectedCategory = null;
 
-    // Category selection
-    categoryGrid.addEventListener('click', (e) => {
-        if (e.target.classList.contains('category-btn')) {
-            // Remove selected class from all buttons
-            categoryGrid.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
+ // Category selection
+ categoryGrid.addEventListener('click', (e) => {
+    if (e.target.classList.contains('category-btn')) {
+        // Remove aria-selected from all buttons
+        categoryGrid.querySelectorAll('.category-btn').forEach(btn => {
+            btn.removeAttribute('aria-selected');
+        });
 
-            // Add selected class to clicked button
-            e.target.classList.add('selected');
-            selectedCategory = e.target.dataset.category;
+        // Set aria-selected on the clicked button
+        e.target.setAttribute('aria-selected', 'true');
+        selectedCategory = e.target.dataset.category;
 
-            // Enable start button
-            startBtn.disabled = false;
-        }
-    });
+        // Enable start button
+        startBtn.disabled = false;
+    }
+});
 
     // Start quiz
     startBtn.addEventListener('click', () => {
@@ -47,17 +47,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
-    //profile button
-    document.getElementById('profileBtn').addEventListener('click', function () {
+    const profileBtn = document.getElementById('profileBtn');
+    fetch('/api/user', { method: 'GET', credentials: 'same-origin' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.username) {
+                profileBtn.textContent = `Welcome, ${data.username}`; // Set username on button
+            }else{
+                profileBtn.textContent = `My Profile`;
+            }
+        })
+        .catch(error => console.error('Could not fetch user data:', error));
+});
+
+    //profile page
+    profileBtn.addEventListener('click', function () {
         fetch('/api/user', {
             method: 'GET', credentials: 'same-origin'
         })
-            .then(response => window.location.href = '/userProfile/userProfile.html') //redirect to profile
-            .catch(error => console.error('could not load user profile', error))
+        .then(response => {
+            if (!response.ok) { 
+                alert('Login to view profile');
+            }
+            window.location.href = '/userProfile/userProfile.html'; // Redirect if logged in
+        })
+        .catch(error => console.error('Could not load user profile:', error));
     });
-});
-
-
+    
 
 //loading quiz based on category
 function loadQuiz(category) {
@@ -130,6 +146,7 @@ function createSubmitButton() {
 function submitQuiz() {
     const quiz_id = `quiz-${Date.now()}`; // Unique quiz ID
     const userAnswers = [];
+    let unanswered = false; // Flag to track unanswered questions
 
     document.querySelectorAll('.question').forEach((questionDiv, index) => {
         const question_id = questionDiv.dataset.questionId;
@@ -140,16 +157,21 @@ function submitQuiz() {
                 question_id: question_id,
                 selected_option: selectedOption.value
             });
+        } else {
+            alert(`You have not answered question no. ${index + 1}, please select an option.`);
+            unanswered = true; // Set flag to true
         }
     });
+
+    if (unanswered) {
+        return; // Stop function execution if any question is unanswered
+    }
 
     if (userAnswers.length === 0) {
         alert("Please select at least one answer!");
         return;
     }
 
-    console.log("Submitting answers:", userAnswers); // Debug: Log answers being sent
-    console.log("Payload being sent:", JSON.stringify({ quiz_id, answers: userAnswers }));
     fetch('http://localhost:3000/submit-quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

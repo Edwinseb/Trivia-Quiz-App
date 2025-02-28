@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            window.location.href = '/account.html#loginForm'; // Redirect if not logged in
+            window.location.href = 'http://localhost:3000/account.html#loginForm'; // Redirect if not logged in
             return;
         }
 
@@ -24,6 +24,7 @@ document.getElementById('logoutBtn').addEventListener('click', function () {
         method: 'GET',
         credentials: 'same-origin'
     })
+    .then(alert('Logged out!'))
     .then(response => window.location.href = '/index.html') // Redirect to index after logout
     .catch(error => console.error('Logout failed:', error));
 });
