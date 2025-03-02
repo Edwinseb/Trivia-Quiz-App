@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update profile with actual user data
         document.getElementById('username').innerText = data.username;
         document.getElementById('email').innerText = data.email;
+        document.getElementById('gamesPlayed').innerText = data.gamesPlayed;
+        document.getElementById('highScore').innerText = `${data.highScore}/15`;
     })
     .catch(error => console.error('Failed to load user profile:', error));
 });

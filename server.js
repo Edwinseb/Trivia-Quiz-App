@@ -87,9 +87,35 @@ app.get('/api/user', (req, res) => {
     return res.status(401).json({ error: "Not logged in" });
   }
 
-  const { username, email } = req.session.user;
-  res.json({ username, email });
+  const { user_id, username, email } = req.session.user;
+
+  // Query for games played
+  const gamesPlayedQuery = new Promise((resolve, reject) => {
+    db.query('SELECT COUNT(*) AS gamesPlayed FROM user_quiz WHERE user_id = ?', [user_id], (err, results) => {
+      if (err) return reject("Error fetching quiz count");
+      resolve(results[0].gamesPlayed || 0);
+    });
+  });
+
+  // Query for high score
+  const highScoreQuery = new Promise((resolve, reject) => {
+    db.query('SELECT MAX(total_score) AS highScore FROM user_quiz WHERE user_id = ?', [user_id], (err, results) => {
+      if (err) return reject("Error fetching High Score");
+      resolve(results[0].highScore || 0);
+    });
+  });
+
+  // Execute both queries and respond once
+  Promise.all([gamesPlayedQuery, highScoreQuery])
+    .then(([gamesPlayed, highScore]) => {
+      res.json({ username, email, gamesPlayed, highScore });
+    })
+    .catch(error => {
+      res.status(500).json({ error });
+    });
 });
+
+
 
 // Check login status
 app.get('/isLoggedIn', (req, res) => {

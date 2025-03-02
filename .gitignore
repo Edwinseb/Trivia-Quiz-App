@@ -1,4 +1,4 @@
 node_modules/
 .idea/
-output.css
+public/output.css
 .env

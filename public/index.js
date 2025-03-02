@@ -4,22 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startBtn');
     let selectedCategory = null;
 
- // Category selection
- categoryGrid.addEventListener('click', (e) => {
-    if (e.target.classList.contains('category-btn')) {
-        // Remove aria-selected from all buttons
-        categoryGrid.querySelectorAll('.category-btn').forEach(btn => {
-            btn.removeAttribute('aria-selected');
-        });
+    // Category selection
+    categoryGrid.addEventListener('click', (e) => {
+        if (e.target.classList.contains('category-btn')) {
+            // Remove aria-selected from all buttons
+            categoryGrid.querySelectorAll('.category-btn').forEach(btn => {
+                btn.removeAttribute('aria-selected');
+            });
 
-        // Set aria-selected on the clicked button
-        e.target.setAttribute('aria-selected', 'true');
-        selectedCategory = e.target.dataset.category;
+            // Set aria-selected on the clicked button
+            e.target.setAttribute('aria-selected', 'true');
+            selectedCategory = e.target.dataset.category;
 
-        // Enable start button
-        startBtn.disabled = false;
-    }
-});
+            // Enable start button
+            startBtn.disabled = false;
+        }
+    });
 
     // Start quiz
     startBtn.addEventListener('click', () => {
@@ -53,46 +53,49 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             if (data.username) {
                 profileBtn.textContent = `Welcome, ${data.username}`; // Set username on button
-            }else{
+            } else {
                 profileBtn.textContent = `My Profile`;
             }
         })
         .catch(error => console.error('Could not fetch user data:', error));
 });
 
-    //profile page
-    profileBtn.addEventListener('click', function () {
-        fetch('/api/user', {
-            method: 'GET', credentials: 'same-origin'
-        })
+//profile page
+profileBtn.addEventListener('click', function () {
+    fetch('/api/user', {
+        method: 'GET', credentials: 'same-origin'
+    })
         .then(response => {
-            if (!response.ok) { 
+            if (!response.ok) {
                 alert('Login to view profile');
             }
             window.location.href = '/userProfile/userProfile.html'; // Redirect if logged in
         })
         .catch(error => console.error('Could not load user profile:', error));
-    });
-    
+});
+
 
 //loading quiz based on category
 function loadQuiz(category) {
-    const quizContainer = document.querySelector('.quiz-container')
+    const quizContainer = document.querySelector('.quiz-container');
+    
+    
     quizContainer.style.height = "fit-content"; //to display all questions uniformly within the quiz-container
     quizContainer.style.width = "fit-content"
     quizContainer.innerHTML = `<div class="quiz-heading">
                                     <h2>${category} Quiz</h2>
-                               </div>`; //category based heading
-
+                                    <a href="/index.html" class="mb-7.5" id="homeLink">Home</a>
+                               </div>`; 
+                               
     fetch(`http://localhost:3000/questions?category=${category}`)
         .then(response => response.json())
         .then(data => {
             console.log("Quiz Questions:", data); // Log to check response
             if (data.length === 0) {
-
-                const alert = document.createElement('h4');
-                alert.innerHTML = `No questions in this category, redirecting to Home Page`;
-                quizContainer.appendChild(alert);
+                document.getElementById('homeLink').style.display = 'none';
+                const notice = document.createElement('h4');
+                notice.innerHTML = `No questions in this category, redirecting to Home Page`;
+                quizContainer.appendChild(notice);
 
                 setTimeout(() => {
                     window.location.href = './index.html';
@@ -178,36 +181,36 @@ function submitQuiz() {
         credentials: 'include', // Changed from 'same-origin' to 'include'
         body: JSON.stringify({ quiz_id, answers: userAnswers })
     })
-    .then(response => {
-        console.log("Response status:", response.status); // Debug: Log HTTP status
-        
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                console.error("Server error:", errorData); // Debug: Log error data
-                throw new Error(errorData.error || 'Server error');
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Server response data:", data); // Debug: Log full response data
-        
-        if (data.score !== undefined && data.total !== undefined) {
-            alert(`Quiz Submitted! Score: ${data.score}/${data.total}`);
-        } else {
-            console.warn("Score or total missing in response:", data);
-            alert("Quiz submitted successfully!");
-        }
-        
-        // Don't redirect immediately in development to see console logs
-        setTimeout(() => {
-            window.location.href = './index.html'; // Changed to relative path
-        }, 2000);
-    })
-    .catch(error => {
-        console.error("Error submitting quiz:", error);
-        alert(`Error submitting quiz: ${error.message}`);
-    });
+        .then(response => {
+            console.log("Response status:", response.status); // Debug: Log HTTP status
+
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    console.error("Server error:", errorData); // Debug: Log error data
+                    throw new Error(errorData.error || 'Server error');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Server response data:", data); // Debug: Log full response data
+
+            if (data.score !== undefined && data.total !== undefined) {
+                alert(`Quiz Submitted! Score: ${data.score}/${data.total}`);
+            } else {
+                console.warn("Score or total missing in response:", data);
+                alert("Quiz submitted successfully!");
+            }
+
+            // Don't redirect immediately in development to see console logs
+            setTimeout(() => {
+                window.location.href = './index.html'; // Changed to relative path
+            }, 2000);
+        })
+        .catch(error => {
+            console.error("Error submitting quiz:", error);
+            alert(`Error submitting quiz: ${error.message}`);
+        });
 }
 
 

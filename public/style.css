@@ -24,8 +24,20 @@
         @apply flex items-start justify-start text-[#3bc7ff] text-xl font-bold pt-1.5 pb-1 mb-1 text-left;
     }
 
+    .quiz-heading{
+        @apply flex flex-row mb-8 items-center justify-between;
+    }
+
+    .quiz-heading h2,a{
+        @apply flex flex-row justify-center py-2.5 px-5 rounded-md font-bold;
+    }
+
     .quiz-heading h2{
-        @apply flex flex-row justify-center py-2.5 px-5 mb-8 text-black bg-[#3bc7ff] text-2xl font-bold;
+        @apply  mr-2 w-[100%] text-black bg-[#3bc7ff] text-2xl;
+    }
+
+    .quiz-heading a{
+        @apply ml-2 text-green-500 bg-black border-green-500 border-2 hover:bg-green-500 hover:text-black text-lg;
     }
 
     .question label{
