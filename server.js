@@ -162,6 +162,10 @@ app.post('/submit-quiz', (req, res) => {
 
   const { quiz_id, answers } = req.body;
 
+  if (!quiz_id) {
+    return res.status(400).json({ error: "Quiz ID is required" });
+  }
+
   if (!answers || answers.length === 0) {
     return res.status(400).json({ error: "No answers submitted" });
   }
@@ -171,8 +175,9 @@ app.post('/submit-quiz', (req, res) => {
     return new Promise((resolve, reject) => {
       db.query('SELECT correct_option FROM questions WHERE id = ?', [answer.question_id], (err, results) => {
         if (err) return reject(err);
-        
-        const is_correct = results[0]?.correct_option === answer.selected_option ? 1 : 0;
+        if (results.length === 0) return reject(new Error("Question not found"));
+
+        const is_correct = results[0].correct_option === answer.selected_option ? 1 : 0;
         if (is_correct) correctAnswers++;
 
         db.query(
@@ -194,7 +199,12 @@ app.post('/submit-quiz', (req, res) => {
         (err) => {
           if (err) return res.status(500).json({ error: "Error saving quiz results" });
 
-          res.json({ message: "Quiz submitted successfully", score: correctAnswers, total: totalQuestions });
+          res.json({
+            message: "Quiz submitted successfully", 
+            score: correctAnswers, 
+            total: totalQuestions,
+            quiz_id: quiz_id // Return the correct quiz_id
+          });
         }
       );
     })
@@ -202,6 +212,60 @@ app.post('/submit-quiz', (req, res) => {
       console.error("Quiz submission error:", err);
       res.status(500).json({ error: "Database error", details: err.message });
     });
+});
+
+app.get('/quiz-results/:quiz_id', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "User not logged in" });
+  }
+  
+  const { user_id } = req.session.user;
+  const { quiz_id } = req.params;
+
+  db.query(
+    `SELECT q.id, q.question_text, a.selected_option, q.correct_option, a.is_correct 
+     FROM answers a
+     JOIN questions q ON a.question_id = q.id
+     JOIN user_quiz uq ON uq.quiz_id = ? AND uq.user_id = ?
+     WHERE a.user_id = ?`,
+    [quiz_id, user_id, user_id],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+      
+      res.json(results);
+    }
+  );
+});
+
+
+app.get('/quiz-results/:quiz_id', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "User not logged in" });
+  }
+  
+  const { user_id } = req.session.user;
+  const { quiz_id } = req.params;
+  
+  // Get the user's answers and the correct answers for a specific quiz attempt
+  db.query(
+    `SELECT q.id, q.question_text, a.selected_option, q.correct_option, a.is_correct 
+     FROM answers a
+     JOIN questions q ON a.question_id = q.id
+     JOIN user_quiz uq ON uq.id = ? AND uq.user_id = ?
+     WHERE a.user_id = ?`,
+    [quiz_id, user_id, user_id],
+    (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+      
+      res.json(results);
+    }
+  );
 });
 
 // Start the server
