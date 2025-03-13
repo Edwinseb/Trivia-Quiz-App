@@ -20,6 +20,10 @@
         @apply flex justify-start items-start leading-none flex-col mb-5;
     }
 
+/*     .quiz-container #timer{
+        @apply sticky top-2 right-2 text-lg font-bold bg-white px-3 py-1 border-2 border-black rounded-md
+    } */
+
     .question h3{
         @apply flex items-start justify-start text-[#3bc7ff] text-xl font-bold pt-1.5 pb-1 mb-1 text-left;
     }
@@ -28,6 +32,7 @@
         @apply flex flex-row mb-8 items-center justify-between;
     }
 
+    
     .quiz-heading h2,a{
         @apply flex flex-row justify-center py-2.5 px-5 rounded-md font-bold;
     }
@@ -36,6 +41,7 @@
         @apply  mr-2 w-[100%] text-black bg-[#3bc7ff] text-2xl;
     }
 
+    
     .quiz-heading a{
         @apply ml-2 text-green-500 bg-black border-green-500 border-2 hover:bg-green-500 hover:text-black text-lg;
     }
@@ -44,7 +50,6 @@
         @apply flex pt-1.5 items-center gap-2 cursor-pointer leading-none text-left ml-7;
     }
     
-
 }
 body{font-family: Verdana, Geneva, Tahoma, sans-serif;}
 

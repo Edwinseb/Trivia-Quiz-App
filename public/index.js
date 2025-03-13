@@ -23,8 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Start quiz
     startBtn.addEventListener('click', () => {
-        if (selectedCategory) {
-            // TODO: Navigate to quiz page or start quiz
+        if (selectedCategory ) {
             console.log(`Starting quiz in category: ${selectedCategory}`);
             alert(`Starting quiz in ${selectedCategory} category!`);
             loadQuiz(selectedCategory);
@@ -38,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'GET',
             credentials: 'same-origin' // Ensure cookies are sent with the request
         })
-            .then(response => {
+            .then(response => response.json())
+            .then(data => {
                 alert('Logged out');
                 window.location.href = '/index.html'
             }) // Redirect to index after logout
@@ -58,35 +58,44 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(error => console.error('Could not fetch user data:', error));
-});
 
-//profile page
-profileBtn.addEventListener('click', function () {
-    fetch('/api/user', {
-        method: 'GET', credentials: 'same-origin'
-    })
-        .then(response => {
-            if (!response.ok) {
-                alert('Login to view profile');
-            }
-            window.location.href = '/userProfile/userProfile.html'; // Redirect if logged in
+    //profile page
+    profileBtn.addEventListener('click', function () {
+        fetch('/api/user', {
+            method: 'GET', credentials: 'same-origin'
         })
-        .catch(error => console.error('Could not load user profile:', error));
+            .then(response => {
+                if (!response.ok) {
+                    alert('Login to view profile');
+                }
+                window.location.href = '/userProfile/userProfile.html'; // Redirect if logged in
+            })
+            .catch(error => console.error('Could not load user profile:', error));
+    });
 });
 
 
 //loading quiz based on category
 function loadQuiz(category) {
+    document.body.classList.add("flex", "flex-row", "justify-center", "items-center", "m-0", "bg-black/75", "bg-blend-overlay", "bg-center", "bg-cover", "bg-repeat-y");
     const quizContainer = document.querySelector('.quiz-container');
-    
-    
     quizContainer.style.height = "fit-content"; //to display all questions uniformly within the quiz-container
-    quizContainer.style.width = "fit-content"
+    quizContainer.style.width = "fit-content";
     quizContainer.innerHTML = `<div class="quiz-heading">
                                     <h2>${category} Quiz</h2>
                                     <a href="/index.html" class="mb-7.5" id="homeLink">Home</a>
-                               </div>`; 
-                               
+                               </div>`;
+
+    let timerDiv = document.createElement('div');
+    timerDiv.id = 'timer';
+    timerDiv.classList.add(
+        "fixed", "flex", "flex-shrink", "flex-wrap", "top-2", "right-2", "text-lg", "font-bold", "text-center",
+        "bg-[#3bc7ff]","text-black", "px-3", "py-1", "border-2", "border-black", "rounded-md"
+    );
+    //document.querySelector('.quiz-heading').appendChild(timerDiv);
+    document.body.appendChild(timerDiv);
+    
+
     fetch(`http://localhost:3000/questions?category=${category}`)
         .then(response => response.json())
         .then(data => {
@@ -103,6 +112,7 @@ function loadQuiz(category) {
                 return;
             }
             displayQuestions(data); // Ensure questions are displayed
+            startTimer(5 * 60); // Start 5-minute timer
         })
         .catch(error => console.error("Error fetching questions:", error));
 }
@@ -132,6 +142,29 @@ function displayQuestions(questions) {
     createSubmitButton();
 
 }
+
+//function to run timer
+function startTimer(duration) {
+    let timerElement = document.getElementById('timer');
+    let timeLeft = duration;
+
+    function updateTimer() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerElement.innerHTML = `Time Left:<br>
+                                  ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert('Time is up! Submitting quiz...');
+            submitQuiz();
+        }
+        timeLeft--;
+    }
+
+    updateTimer(); // Show timer immediately
+    let timerInterval = setInterval(updateTimer, 1000);
+}
+
 //creating submit button
 function createSubmitButton() {
     const quizContainer = document.querySelector('.quiz-container');
