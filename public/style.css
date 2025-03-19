@@ -20,10 +20,6 @@
         @apply flex justify-start items-start leading-none flex-col mb-5;
     }
 
-/*     .quiz-container #timer{
-        @apply sticky top-2 right-2 text-lg font-bold bg-white px-3 py-1 border-2 border-black rounded-md
-    } */
-
     .question h3{
         @apply flex items-start justify-start text-[#3bc7ff] text-xl font-bold pt-1.5 pb-1 mb-1 text-left;
     }
@@ -31,7 +27,6 @@
     .quiz-heading{
         @apply flex flex-row mb-8 items-center justify-between;
     }
-
     
     .quiz-heading h2,a{
         @apply flex flex-row justify-center py-2.5 px-5 rounded-md font-bold;

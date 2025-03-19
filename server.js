@@ -115,8 +115,6 @@ app.get('/api/user', (req, res) => {
     });
 });
 
-
-
 // Check login status
 app.get('/isLoggedIn', (req, res) => {
   res.json({ loggedIn: !!req.session.user });
@@ -125,7 +123,7 @@ app.get('/isLoggedIn', (req, res) => {
 // Logout route
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/account.html');
+    res.redirect('/index.html');
   });
 });
 
@@ -154,8 +152,6 @@ app.post('/submit-quiz', (req, res) => {
   }
 
   const { user_id } = req.session.user;
-  console.log("Extracted user_id:", user_id);
-
   if (!user_id) {
     return res.status(400).json({ error: "User ID is missing from session" });
   }
@@ -213,33 +209,6 @@ app.post('/submit-quiz', (req, res) => {
       res.status(500).json({ error: "Database error", details: err.message });
     });
 });
-
-app.get('/quiz-results/:quiz_id', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: "User not logged in" });
-  }
-  
-  const { user_id } = req.session.user;
-  const { quiz_id } = req.params;
-
-  db.query(
-    `SELECT q.id, q.question_text, a.selected_option, q.correct_option, a.is_correct 
-     FROM answers a
-     JOIN questions q ON a.question_id = q.id
-     JOIN user_quiz uq ON uq.quiz_id = ? AND uq.user_id = ?
-     WHERE a.user_id = ?`,
-    [quiz_id, user_id, user_id],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
-      
-      res.json(results);
-    }
-  );
-});
-
 
 app.get('/quiz-results/:quiz_id', (req, res) => {
   if (!req.session.user) {

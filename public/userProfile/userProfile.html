@@ -12,18 +12,52 @@
     class="flex flex-col justify-center items-center h-screen bg-black/75 bg-blend-overlay bg-center bg-cover bg-repeat-y"
     style="background-image: url('neonBlue.jpg');">
 
-    <div
-        class="flex flex-col flex-wrap justify-around content-center w-[600px] h-[600px] bg-black text-white p-10 rounded-lg shadow-lg text-center">
+    <div class="flex flex-col justify-evenly content-center w-fit h-[600px]
+         bg-black text-white p-10 rounded-lg shadow-lg text-center">
         <div id="userInfo" class="">
             <h2 id="username" class="text-4xl font-bold mb-4"></h2>
             <h4 class="mt-2"><strong><span id="email"></span></strong></h4>
         </div>
-        <div
-            class="quiz-stats flex flex-col justify-around w-[400px] h-[200px] mt-4 p-4 bg-[#3bc7ff] text-black rounded-lg font-bold">
+        <div class="quiz-stats flex flex-col justify-around w-fit h-fit mt-4 p-4 bg-[#3bc7ff] text-black rounded-lg font-bold">
             <h3 class="mb-2 text-2xl">Quiz Stats</h3>
             <div>
-                <p>Quizzes Attempted: <span id="gamesPlayed"></span></p>
-                <p>High Score: <span id="highScore">0</span></p>
+                <!-- Add this table inside the quiz-stats div, after the existing content -->
+                <table class="w-fit h-fit mt-4 border-collapse text-black rounded-md">
+                    <thead>
+                        <tr>
+                            <th class="border-2 border-black bg-black text-white p-2">Category</th>
+                            <th class="border-2 border-black bg-black text-white p-2">Attempts</th>
+                            <th class="border-2 border-black bg-black text-white p-2">High Score (20)</th>
+                            <th class="border-2 border-black bg-black text-white p-2">Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border-2 border-black p-2">Computer Science</td>
+                            <td class="border-2 border-black p-2" id="cs_attempts">0</td>
+                            <td class="border-2 border-black p-2" id="cs_high">0</td>
+                            <td class="border-2 border-black p-2" id="cs_avg">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border-2 border-black p-2">General Knowledge</td>
+                            <td class="border-2 border-black p-2" id="gk_attempts">0</td>
+                            <td class="border-2 border-black p-2" id="gk_high">0</td>
+                            <td class="border-2 border-black p-2" id="gk_avg">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border-2 border-black p-2">Movies</td>
+                            <td class="border-2 border-black p-2" id="movies_attempts">0</td>
+                            <td class="border-2 border-black p-2" id="movies_high">0</td>
+                            <td class="border-2 border-black p-2" id="movies_avg">0</td>
+                        </tr>
+                        <tr>
+                            <td class="border-2 border-black p-2">Psychology</td>
+                            <td class="border-2 border-black p-2" id="psych_attempts">0</td>
+                            <td class="border-2 border-black p-2" id="psych_high">0</td>
+                            <td class="border-2 border-black p-2" id="psych_avg">0</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -43,3 +77,4 @@
 </body>
 
 </html>
+

@@ -32,18 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // logout btn
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-        fetch('/logout', {
-            method: 'GET',
-            credentials: 'same-origin' // Ensure cookies are sent with the request
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert('Logged out');
-                window.location.href = '/index.html'
-            }) // Redirect to index after logout
-            .catch(error => console.error('Logout failed:', error));
-
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', function () {
+        window.location.href = "/logout";
+        logoutBtn.textContent=`Profile`;
 
     });
 
@@ -60,17 +52,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Could not fetch user data:', error));
 
     //profile page
+    
     profileBtn.addEventListener('click', function () {
+        
         fetch('/api/user', {
             method: 'GET', credentials: 'same-origin'
         })
             .then(response => {
                 if (!response.ok) {
                     alert('Login to view profile');
+                    window.location.href = '/account.html#loginForm';
+                    return;
                 }
                 window.location.href = '/userProfile/userProfile.html'; // Redirect if logged in
             })
             .catch(error => console.error('Could not load user profile:', error));
+        
     });
 });
 
@@ -149,6 +146,9 @@ function displayQuestions(questions) {
 
 
 //function to run timer
+let timerInterval;
+
+// Modify the startTimer function to store the interval ID
 function startTimer(duration) {
     let timerElement = document.getElementById('timer');
     let timeLeft = duration;
@@ -167,7 +167,7 @@ function startTimer(duration) {
     }
 
     updateTimer(); // Show timer immediately
-    let timerInterval = setInterval(updateTimer, 1000);
+    timerInterval = setInterval(updateTimer, 1000);
 }
 
 //creating submit button
@@ -182,12 +182,13 @@ function createSubmitButton() {
 
     // Add event listener to the button after creating it
     sub.addEventListener('click', submitQuiz);
+    clearInterval(document.getElementById('timer'));
 }
 //Submit the quiz
 function submitQuiz() {
-    const timer = document.getElementById('timer');
-    clearInterval(timer);
+    clearInterval(timerInterval);
     timer.disabled = true;
+    timer.style.visible = 'none'
     const quiz_id = `quiz-${Date.now()}`; // Unique quiz ID
     const userAnswers = [];
     let unanswered = false; // Flag to track unanswered questions
@@ -272,7 +273,10 @@ function submitQuiz() {
 // Function to display quiz results
 function displayQuizResults(data, userAnswers) {
     const quizContainer = document.querySelector('.quiz-container');
-    
+    const timer = document.querySelector('#timer');
+    if (timer) {
+        timer.remove();
+    }
     // Clear the submit button
     const submitBtn = document.getElementById('submitBtn');
     if (submitBtn) submitBtn.remove();
