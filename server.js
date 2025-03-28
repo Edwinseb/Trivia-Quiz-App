@@ -1,24 +1,20 @@
-const express = require('express'); // For creating the server
-const mysql = require('mysql2'); // For connecting to the database
-const bodyParser = require('body-parser'); // For reading form data
+const express = require('express');
+const mysql = require('mysql2');
+const bodyParser = require('body-parser');
 const session = require('express-session');
-const app = express(); // Create the Express app
+const app = express();
 
-// Use sessions
 app.use(session({
-  secret: 'Tyler_durden99', // Change this to a secure key
+  secret: 'Tyler_durden99',
   resave: false,
-  saveUninitialized: false, // Ensure session isn't created unless needed
-  cookie: { secure: false } // Set to true if using HTTPS
+  saveUninitialized: false,
+  cookie: { secure: false }
 }));
 
-// To handle form data properly
 app.use(bodyParser.urlencoded({ extended: true }));
-// Serve static files (HTML, CSS, JS) from the public folder
 app.use(express.static('public'));
 app.use(express.json());
 
-// Set up the database connection
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -26,7 +22,6 @@ const db = mysql.createConnection({
   database: 'quizapp'
 });
 
-// Connect to the database
 db.connect((err) => {
   if (err) {
     console.error('Database connection failed:', err);
@@ -49,16 +44,15 @@ app.post('/register', (req, res) => {
       console.error('Error inserting user:', err);
       return res.status(500).send('Registration failed.');
     }
-    // Automatically log in the user
-    const user_id = result.insertId; // Get newly created user's ID
-    req.session.user = { user_id, username, email }; // Store user session
+    req.session.user = { user_id: result.insertId, username, email };
     res.redirect('http://localhost:3000/index.html');
   });
 });
 
-// User Login
+// User Login with redirect support
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
+  const redirectCategory = req.query.category || ''; // Get category from query param
 
   const checkUserQuery = 'SELECT * FROM users WHERE email = ?';
   db.query(checkUserQuery, [email], (err, results) => {
@@ -74,7 +68,10 @@ app.post('/login', (req, res) => {
     const user = results[0];
     if (user.password === password) {
       req.session.user = { user_id: user.id, username: user.username, email: user.email };
-      res.redirect('/index.html');
+      const redirectUrl = redirectCategory 
+        ? `/index.html?category=${encodeURIComponent(redirectCategory)}`
+        : '/index.html';
+      res.redirect(redirectUrl);
     } else {
       res.status(401).send('Invalid password.');
     }
@@ -90,40 +87,37 @@ app.get('/api/user', (req, res) => {
   const { user_id, username, email } = req.session.user;
 
   // Query for games played
-  const gamesPlayedQuery = new Promise((resolve, reject) => {
-    db.query('SELECT COUNT(*) AS gamesPlayed FROM user_quiz WHERE user_id = ?', [user_id], (err, results) => {
-      if (err) return reject("Error fetching quiz count");
-      resolve(results[0].gamesPlayed || 0);
+  db.query('SELECT COUNT(*) AS gamesPlayed FROM user_quiz WHERE user_id = ?', [user_id], (err, gamesPlayedResults) => {
+    if (err) {
+      console.error('Error fetching games played:', err);
+      return res.status(500).json({ error: "Error fetching quiz count" });
+    }
+
+    // Query for high score
+    db.query('SELECT MAX(total_score) AS highScore FROM user_quiz WHERE user_id = ?', [user_id], (err, highScoreResults) => {
+      if (err) {
+        console.error('Error fetching high score:', err);
+        return res.status(500).json({ error: "Error fetching high score" });
+      }
+
+      res.json({
+        username,
+        email,
+        gamesPlayed: gamesPlayedResults[0].gamesPlayed || 0,
+        highScore: highScoreResults[0].highScore || 0
+      });
     });
   });
-
-  // Query for high score
-  const highScoreQuery = new Promise((resolve, reject) => {
-    db.query('SELECT MAX(total_score) AS highScore FROM user_quiz WHERE user_id = ?', [user_id], (err, results) => {
-      if (err) return reject("Error fetching High Score");
-      resolve(results[0].highScore || 0);
-    });
-  });
-
-  // Execute both queries and respond once
-  Promise.all([gamesPlayedQuery, highScoreQuery])
-    .then(([gamesPlayed, highScore]) => {
-      res.json({ username, email, gamesPlayed, highScore });
-    })
-    .catch(error => {
-      res.status(500).json({ error });
-    });
 });
 
-// Fetch detailed quiz statistics for categories
+// Fetch quiz statistics
 app.get("/quiz-stats", (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "Not logged in" });
   }
-
   const userId = req.session.user.user_id;
 
-  const query = `
+  db.query(`
     SELECT 
       uq.category,
       COUNT(uq.id) AS attempts,
@@ -131,19 +125,15 @@ app.get("/quiz-stats", (req, res) => {
       ROUND(AVG(uq.total_score), 2) AS average
     FROM user_quiz uq
     WHERE uq.user_id = ?
-    GROUP BY uq.category;
-  `;
-
-  db.query(query, [userId], (err, results) => {
+    GROUP BY uq.category
+  `, [userId], (err, results) => {
     if (err) {
       console.error("Error fetching quiz stats:", err);
       return res.status(500).json({ error: "Failed to fetch quiz stats" });
     }
-    console.log("Fetched quiz stats:", JSON.stringify(results, null, 2));
     res.json(results);
   });
 });
-
 
 // Check login status
 app.get('/isLoggedIn', (req, res) => {
@@ -157,16 +147,18 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Fetch questions dynamically based on category
+// Fetch questions (require login)
 app.get('/questions', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "User not logged in" });
+  }
   const category = req.query.category;
 
   if (!category) {
     return res.status(400).json({ error: 'Category is required' });
   }
 
-  const sql = 'SELECT * FROM questions WHERE category = ?';
-  db.query(sql, [category], (err, results) => {
+  db.query('SELECT * FROM questions WHERE category = ?', [category], (err, results) => {
     if (err) {
       console.error('Error fetching questions:', err);
       return res.status(500).json({ error: 'Database error' });
@@ -175,26 +167,23 @@ app.get('/questions', (req, res) => {
   });
 });
 
-// Storing quiz answers and validating them
+// Submit quiz
 app.post('/submit-quiz', (req, res) => {
   if (!req.session.user) {
-    res.status(401).json({ error: "User not logged in" });
-    return window.location.href('./account.html');
+    return res.status(401).json({ error: "User not logged in" });
   }
-
   const { user_id } = req.session.user;
-  const { quiz_id, category, answers } = req.body; // Add category to request body
+  const { quiz_id, category, answers } = req.body;
 
   if (!quiz_id || !category) {
     return res.status(400).json({ error: "Quiz ID and category are required" });
   }
-
   if (!answers || answers.length === 0) {
     return res.status(400).json({ error: "No answers submitted" });
   }
 
   let correctAnswers = 0;
-  let queries = answers.map(answer => {
+  const queries = answers.map(answer => {
     return new Promise((resolve, reject) => {
       db.query('SELECT correct_option FROM questions WHERE id = ?', [answer.question_id], (err, results) => {
         if (err) return reject(err);
@@ -236,33 +225,30 @@ app.post('/submit-quiz', (req, res) => {
     });
 });
 
+// Fetch quiz results
 app.get('/quiz-results/:quiz_id', (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "User not logged in" });
   }
-
   const { user_id } = req.session.user;
   const { quiz_id } = req.params;
 
-  const query = `
+  db.query(`
     SELECT q.id, q.question_text, a.selected_option, q.correct_option, a.is_correct 
     FROM answers a
     JOIN questions q ON a.question_id = q.id
     JOIN user_quiz uq ON uq.quiz_id = ? AND uq.user_id = a.user_id
     WHERE a.user_id = ?
-  `;
-  
-  db.query(query, [quiz_id, user_id], (err, results) => {
+  `, [quiz_id, user_id], (err, results) => {
     if (err) {
       console.error("Database error:", err);
       return res.status(500).json({ error: "Database error" });
     }
-    console.log(`Quiz results for quiz_id ${quiz_id}, user_id ${user_id}:`, results); // Debug
+    //console.log(`Quiz results for quiz_id ${quiz_id}, user_id ${user_id}:`, results);
     res.json(results);
   });
 });
 
-// Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
