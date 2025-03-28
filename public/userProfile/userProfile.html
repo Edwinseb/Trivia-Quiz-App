@@ -1,73 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/output.css">
-
     <title>User Profile</title>
 </head>
-
-<body
-    class="flex flex-col justify-center items-center h-screen bg-black/75 bg-blend-overlay bg-center bg-cover bg-repeat-y"
+<body class="flex flex-col justify-center items-center h-screen bg-black/75 bg-blend-overlay bg-center bg-cover bg-repeat-y"
     style="background-image: url('neonBlue.jpg');">
-
-    <div class="flex flex-col justify-evenly content-center w-fit h-[600px]
-         bg-black text-white p-10 rounded-lg shadow-lg text-center">
-        <div id="userInfo" class="">
+    <div class="flex flex-col justify-evenly content-center w-fit h-fit bg-black text-white p-10 rounded-lg shadow-lg text-center">
+        <div id="userInfo">
             <h2 id="username" class="text-4xl font-bold mb-4"></h2>
             <h4 class="mt-2"><strong><span id="email"></span></strong></h4>
         </div>
+
+        <!-- Edit Profile Form -->
+        <div id="editProfile" class="mt-4">
+            <button id="editBtn" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md transition">
+                Edit Profile
+            </button>
+            <form id="editForm" class="hidden flex-col gap-4 mt-4">
+                <div class="flex flex-col mt-4">
+                    <label for="editUsername" class="text-left text-white font-bold mb-1">New Username</label>
+                    <input type="text" id="editUsername" placeholder="New Username" class="p-2 rounded-md bg-black text-white border border-[#3bc7ff] focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex flex-col mt-4">
+                    <label for="editEmail" class="text-left text-white font-bold mb-1">New Email</label>
+                    <input type="email" id="editEmail" placeholder="New Email" class="p-2 rounded-md bg-black text-white border border-[#3bc7ff] focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex flex-col mt-4">
+                    <label for="editPassword" class="text-left text-white font-bold mb-1">New Password</label>
+                    <input type="password" id="editPassword" placeholder="New Password" class="p-2 rounded-md bg-black text-white border border-[#3bc7ff] focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="submit" id="saveBtn" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-md transition">
+                        Save
+                    </button>
+                    <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <div class="quiz-stats flex flex-col justify-around w-fit h-fit mt-4 p-4 bg-[#3bc7ff] text-black rounded-lg font-bold">
             <h3 class="mb-2 text-2xl">Quiz Stats</h3>
-            <div>
-                <!-- Add this table inside the quiz-stats div, after the existing content -->
-                <table class="w-fit h-fit mt-4 border-collapse text-black rounded-md">
-                    <thead>
-                        <tr>
-                            <th class="border-2 border-black bg-black text-white p-2">Category</th>
-                            <th class="border-2 border-black bg-black text-white p-2">Attempts</th>
-                            <th class="border-2 border-black bg-black text-white p-2">High Score (20)</th>
-                            <th class="border-2 border-black bg-black text-white p-2">Average</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border-2 border-black p-2">Computer Science</td>
-                            <td class="border-2 border-black p-2" id="cs_attempts">0</td>
-                            <td class="border-2 border-black p-2" id="cs_high">0</td>
-                            <td class="border-2 border-black p-2" id="cs_avg">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border-2 border-black p-2">General Knowledge</td>
-                            <td class="border-2 border-black p-2" id="gk_attempts">0</td>
-                            <td class="border-2 border-black p-2" id="gk_high">0</td>
-                            <td class="border-2 border-black p-2" id="gk_avg">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border-2 border-black p-2">Movies</td>
-                            <td class="border-2 border-black p-2" id="movies_attempts">0</td>
-                            <td class="border-2 border-black p-2" id="movies_high">0</td>
-                            <td class="border-2 border-black p-2" id="movies_avg">0</td>
-                        </tr>
-                        <tr>
-                            <td class="border-2 border-black p-2">Psychology</td>
-                            <td class="border-2 border-black p-2" id="psych_attempts">0</td>
-                            <td class="border-2 border-black p-2" id="psych_high">0</td>
-                            <td class="border-2 border-black p-2" id="psych_avg">0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="w-fit h-fit mt-4 border-collapse text-black rounded-md">
+                <thead>
+                    <tr>
+                        <th class="border-2 border-black bg-black text-white p-2">Category</th>
+                        <th class="border-2 border-black bg-black text-white p-2">Attempts</th>
+                        <th class="border-2 border-black bg-black text-white p-2">High Score (20)</th>
+                        <th class="border-2 border-black bg-black text-white p-2">Average</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border-2 border-black p-2">Computer Science</td><td class="border-2 border-black p-2" id="cs_attempts">0</td><td class="border-2 border-black p-2" id="cs_high">0</td><td class="border-2 border-black p-2" id="cs_avg">0</td></tr>
+                    <tr><td class="border-2 border-black p-2">General Knowledge</td><td class="border-2 border-black p-2" id="gk_attempts">0</td><td class="border-2 border-black p-2" id="gk_high">0</td><td class="border-2 border-black p-2" id="gk_avg">0</td></tr>
+                    <tr><td class="border-2 border-black p-2">Movies</td><td class="border-2 border-black p-2" id="movies_attempts">0</td><td class="border-2 border-black p-2" id="movies_high">0</td><td class="border-2 border-black p-2" id="movies_avg">0</td></tr>
+                    <tr><td class="border-2 border-black p-2">Psychology</td><td class="border-2 border-black p-2" id="psych_attempts">0</td><td class="border-2 border-black p-2" id="psych_high">0</td><td class="border-2 border-black p-2" id="psych_avg">0</td></tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="flex justify-between mt-4">
-            <button id="homeBtn"
-                class="w-7.5 px-4 py-2 border-solid border-2 border-green-600 hover:bg-green-600 text-green-600 hover:text-white font-bold rounded-md transition">
+            <button id="homeBtn" class="w-7.5 px-4 py-2 border-solid border-2 border-green-600 hover:bg-green-600 text-green-600 hover:text-white font-bold rounded-md transition">
                 Dashboard
             </button>
-            <button id="logoutBtn"
-                class="w-7.5 px-4 py-2 border-solid border-2 border-red-500 hover:bg-red-500 text-red-500 hover:text-white font-bold rounded-md transition">
+            <button id="logoutBtn" class="w-7.5 px-4 py-2 border-solid border-2 border-red-500 hover:bg-red-500 text-red-500 hover:text-white font-bold rounded-md transition">
                 Logout
             </button>
         </div>
@@ -75,6 +74,4 @@
 
     <script src="/userProfile/script.js"></script>
 </body>
-
 </html>
-

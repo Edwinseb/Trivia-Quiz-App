@@ -110,6 +110,57 @@ app.get('/api/user', (req, res) => {
   });
 });
 
+// Update user profile
+app.put('/api/update-profile', (req, res) => {
+  if (!req.session.user) {
+      return res.status(401).json({ error: "Not logged in" });
+  }
+
+  const { user_id } = req.session.user;
+  const { username, email, password } = req.body;
+
+  // Build the update query dynamically based on provided fields
+  let query = 'UPDATE users SET ';
+  const fields = [];
+  const values = [];
+
+  if (username) {
+      fields.push('username = ?');
+      values.push(username);
+  }
+  if (email) {
+      fields.push('email = ?');
+      values.push(email);
+  }
+  if (password) {
+      fields.push('password = ?');
+      values.push(password);
+  }
+
+  if (fields.length === 0) {
+      return res.status(400).json({ error: "No fields to update" });
+  }
+
+  query += fields.join(', ') + ' WHERE id = ?';
+  values.push(user_id);
+
+  db.query(query, values, (err, result) => {
+      if (err) {
+          console.error('Error updating profile:', err);
+          return res.status(500).json({ error: "Failed to update profile" });
+      }
+
+      // Update session with new values
+      if (username) req.session.user.username = username;
+      if (email) req.session.user.email = email;
+
+      res.json({
+          username: req.session.user.username,
+          email: req.session.user.email
+      });
+  });
+});
+
 // Fetch quiz statistics
 app.get("/quiz-stats", (req, res) => {
   if (!req.session.user) {
