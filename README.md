@@ -1,4 +1,5 @@
-Trivia Quiz App using HTML, CSS, JavaScript & MySQL
+#Trivia Quiz App 
+using HTML, CSS, JavaScript & MySQL
 
 Dependencies:
     tailwindcss: v3.4.17

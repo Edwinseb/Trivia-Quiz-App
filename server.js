@@ -115,6 +115,36 @@ app.get('/api/user', (req, res) => {
     });
 });
 
+// Fetch detailed quiz statistics for categories
+app.get("/quiz-stats", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  const userId = req.session.user.user_id;
+
+  const query = `
+    SELECT 
+      uq.category,
+      COUNT(uq.id) AS attempts,
+      MAX(uq.total_score) AS highScore,
+      ROUND(AVG(uq.total_score), 2) AS average
+    FROM user_quiz uq
+    WHERE uq.user_id = ?
+    GROUP BY uq.category;
+  `;
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching quiz stats:", err);
+      return res.status(500).json({ error: "Failed to fetch quiz stats" });
+    }
+    console.log("Fetched quiz stats:", JSON.stringify(results, null, 2));
+    res.json(results);
+  });
+});
+
+
 // Check login status
 app.get('/isLoggedIn', (req, res) => {
   res.json({ loggedIn: !!req.session.user });
@@ -148,18 +178,15 @@ app.get('/questions', (req, res) => {
 // Storing quiz answers and validating them
 app.post('/submit-quiz', (req, res) => {
   if (!req.session.user) {
-    return res.status(401).json({ error: "User not logged in" });
+    res.status(401).json({ error: "User not logged in" });
+    return window.location.href('./account.html');
   }
 
   const { user_id } = req.session.user;
-  if (!user_id) {
-    return res.status(400).json({ error: "User ID is missing from session" });
-  }
+  const { quiz_id, category, answers } = req.body; // Add category to request body
 
-  const { quiz_id, answers } = req.body;
-
-  if (!quiz_id) {
-    return res.status(400).json({ error: "Quiz ID is required" });
+  if (!quiz_id || !category) {
+    return res.status(400).json({ error: "Quiz ID and category are required" });
   }
 
   if (!answers || answers.length === 0) {
@@ -189,17 +216,16 @@ app.post('/submit-quiz', (req, res) => {
     .then(() => {
       const totalQuestions = answers.length;
       db.query(
-        `INSERT INTO user_quiz (user_id, quiz_id, total_score, questions_attempted, correct_answers)
-        VALUES (?, ?, ?, ?, ?)`,
-        [user_id, quiz_id, correctAnswers, totalQuestions, correctAnswers],
+        `INSERT INTO user_quiz (user_id, quiz_id, category, total_score, questions_attempted, correct_answers)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, quiz_id, category, correctAnswers, totalQuestions, correctAnswers],
         (err) => {
           if (err) return res.status(500).json({ error: "Error saving quiz results" });
-
           res.json({
-            message: "Quiz submitted successfully", 
-            score: correctAnswers, 
+            message: "Quiz submitted successfully",
+            score: correctAnswers,
             total: totalQuestions,
-            quiz_id: quiz_id // Return the correct quiz_id
+            quiz_id: quiz_id
           });
         }
       );
@@ -214,27 +240,26 @@ app.get('/quiz-results/:quiz_id', (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: "User not logged in" });
   }
-  
+
   const { user_id } = req.session.user;
   const { quiz_id } = req.params;
+
+  const query = `
+    SELECT q.id, q.question_text, a.selected_option, q.correct_option, a.is_correct 
+    FROM answers a
+    JOIN questions q ON a.question_id = q.id
+    JOIN user_quiz uq ON uq.quiz_id = ? AND uq.user_id = a.user_id
+    WHERE a.user_id = ?
+  `;
   
-  // Get the user's answers and the correct answers for a specific quiz attempt
-  db.query(
-    `SELECT q.id, q.question_text, a.selected_option, q.correct_option, a.is_correct 
-     FROM answers a
-     JOIN questions q ON a.question_id = q.id
-     JOIN user_quiz uq ON uq.id = ? AND uq.user_id = ?
-     WHERE a.user_id = ?`,
-    [quiz_id, user_id, user_id],
-    (err, results) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
-      
-      res.json(results);
+  db.query(query, [quiz_id, user_id], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Database error" });
     }
-  );
+    console.log(`Quiz results for quiz_id ${quiz_id}, user_id ${user_id}:`, results); // Debug
+    res.json(results);
+  });
 });
 
 // Start the server

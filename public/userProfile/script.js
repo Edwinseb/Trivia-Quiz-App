@@ -1,37 +1,94 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Fetch user data from the backend
+document.addEventListener('DOMContentLoaded', () => {
+    // Fetch user basic info
     fetch('/api/user', {
-        method: 'GET',
-        credentials: 'same-origin' // Ensure session cookies are sent
+      method: 'GET',
+      credentials: 'same-origin'
     })
-    .then(response => response.json())
-    .then(data => {
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
         if (data.error) {
-            window.location.href = 'http://localhost:3000/account.html#loginForm'; // Redirect if not logged in
-            return;
+          window.location.href = 'http://localhost:3000/account.html#loginForm';
+          return;
         }
-
-        // Update profile with actual user data
-        document.getElementById('username').innerText = data.username;
-        document.getElementById('email').innerText = data.email;
-        document.getElementById('gamesPlayed').innerText = data.gamesPlayed;
-        document.getElementById('highScore').innerText = `${data.highScore}/20`;
+        document.getElementById('username').textContent = data.username || 'Unknown User';
+        document.getElementById('email').textContent = data.email || 'No email';
+      })
+      .catch(error => {
+        console.error('Failed to load user profile:', error);
+        document.getElementById('userInfo').innerHTML += '<p class="text-red-500">Error loading profile</p>';
+      });
+  
+    // Fetch quiz statistics and update table
+    fetch('/quiz-stats', {
+      method: 'GET',
+      credentials: 'same-origin'
     })
-    .catch(error => console.error('Failed to load user profile:', error));
-});
-
-// Logout button functionality
-document.getElementById('logoutBtn').addEventListener('click', function () {
-    fetch('/logout', {
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(stats => {
+        if (!Array.isArray(stats)) {
+          throw new Error('Invalid data format received from /quiz-stats');
+        }
+        console.log('Received Stats:', stats); // Debugging
+        updateQuizTable(stats);
+      })
+      .catch(error => {
+        console.error('Failed to load quiz stats:', error);
+        document.querySelector('.quiz-stats').innerHTML += '<p class="text-red-500">Error loading stats</p>';
+      });
+  
+    // Update quiz stats table
+    function updateQuizTable(stats) {
+      const categoryMap = {
+        'Computer Science': 'cs',
+        'GK': 'gk',
+        'Movies': 'movies',
+        'Psychology': 'psych'
+      };
+  
+      // Reset all table cells to 0
+      Object.values(categoryMap).forEach(prefix => {
+        document.getElementById(`${prefix}_attempts`).textContent = '0';
+        document.getElementById(`${prefix}_high`).textContent = '0';
+        document.getElementById(`${prefix}_avg`).textContent = '0';
+      });
+  
+      // Update table with received stats
+      stats.forEach(stat => {
+        const prefix = categoryMap[stat.category];
+        if (!prefix) {
+          console.warn('No matching table row for category:', stat.category);
+          return;
+        }
+        document.getElementById(`${prefix}_attempts`).textContent = stat.attempts || '0';
+        document.getElementById(`${prefix}_high`).textContent = stat.highScore || '0';
+        document.getElementById(`${prefix}_avg`).textContent = stat.average || '0';
+      });
+    }
+  
+    // Dashboard button
+    document.getElementById('homeBtn').addEventListener('click', () => {
+      window.location.href = '/index.html';
+    });
+  
+    // Logout button
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      fetch('/logout', {
         method: 'GET',
         credentials: 'same-origin'
-    })
-    .then(alert('Logged out!'))
-    .then(response => window.location.href = '/index.html') // Redirect to index after logout
-    .catch(error => console.error('Logout failed:', error));
-});
-
-//dashboard function
-document.getElementById('homeBtn').addEventListener('click', function(){
-    window.location.href = '/index.html';
-});
+      })
+        .then(() => {
+          alert('Logged out!');
+          window.location.href = '/index.html';
+        })
+        .catch(error => {
+          console.error('Logout failed:', error);
+          alert('Logout failed. Please try again.');
+        });
+    });
+  });
