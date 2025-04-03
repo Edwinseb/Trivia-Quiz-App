@@ -12,7 +12,7 @@ document.getElementById('addQuestionForm').addEventListener('submit', function (
     const option_b = document.getElementById('optionB').value;
     const option_c = document.getElementById('optionC').value;
     const option_d = document.getElementById('optionD').value;
-    const correct_option = document.getElementById('correctOption').value; // ✅ FIXED
+    const correct_option = document.getElementById('correctOption').value;
 
     fetch('/admin/add-question', {  // ✅ Corrected URL
         method: 'POST',
