@@ -3,6 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const startBtn = document.getElementById('startBtn');
   let selectedCategory = null;
 
+  fetch('/api/user', { method: 'GET', credentials: 'same-origin' })
+    .then(response => response.json())
+    .then(data => {
+      if (data.role === 'admin') {
+        manageQuizBtn.classList.remove('hidden');
+      }
+    })
+    .catch(error => console.error('Could not fetch user data:', error));
+
+  // Redirect to admin panel on click
+  manageQuizBtn.addEventListener('click', () => {
+    window.location.href = '/admin/admin.html';
+  });
+
   // Check for redirect from login with category
   const urlParams = new URLSearchParams(window.location.search);
   const redirectCategory = urlParams.get('category');

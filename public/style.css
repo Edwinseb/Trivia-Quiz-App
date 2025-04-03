@@ -44,6 +44,10 @@
     .question label{
         @apply flex pt-1.5 items-center gap-2 cursor-pointer leading-none text-left ml-7;
     }
+
+    .delete-btn{
+        @apply px-3 py-1.5 border-red-500 border-2 hover:bg-red-500
+    }
     
 }
 body{font-family: Verdana, Geneva, Tahoma, sans-serif;}
