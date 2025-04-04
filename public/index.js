@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       if (data.role === 'admin') {
         manageQuizBtn.classList.remove('hidden');
+        manageQuizBtn.classList.add('flex');
       }
     })
     .catch(error => console.error('Could not fetch user data:', error));
@@ -81,24 +82,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Check login status and start quiz or redirect
-  function checkLoginAndStartQuiz(category) {
-    fetch('/isLoggedIn', { method: 'GET', credentials: 'same-origin' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.loggedIn) {
-          console.log(`Starting quiz in category: ${category}`);
-          alert(`Starting quiz in ${category} category!`);
-          loadQuiz(category);
-        } else {
-          alert('Please log in to take the quiz!');
-          window.location.href = `/account.html#loginForm?category=${encodeURIComponent(category)}`;
-        }
-      })
-      .catch(error => {
-        console.error('Error checking login status:', error);
-        window.location.href = '/account.html#loginForm';
-      });
-  }
+  // Replace the checkLoginAndStartQuiz function with this updated version
+function checkLoginAndStartQuiz(category) {
+  fetch('/api/user', { method: 'GET', credentials: 'same-origin' })
+    .then(response => {
+      if (!response.ok) {
+        // User is not logged in (401 Unauthorized)
+        alert('Please log in to take the quiz!');
+        window.location.href = `/account.html#loginForm?category=${encodeURIComponent(category)}`;
+        return;
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data && data.user_id) {
+        console.log(`Starting quiz in category: ${category}`);
+        alert(`Starting quiz in ${category} category!`);
+        loadQuiz(category);
+      }
+    })
+    .catch(error => {
+      console.error('Error checking login status:', error);
+      window.location.href = '/account.html#loginForm';
+    });
+}
 });
 
 // Load quiz based on category
